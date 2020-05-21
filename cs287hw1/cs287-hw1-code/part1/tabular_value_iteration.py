@@ -134,9 +134,14 @@ class ValueIteration(object):
 
         """ INSERT YOUR CODE HERE"""
         if self.policy_type == 'deterministic':
-            raise NotImplementedError
+            next_v  = np.max(np.sum(self.transitions*
+                                    (self.rewards+self.discount*self.value_fun.get_values(None)),axis=2)
+                             ,axis=1)
         elif self.policy_type == 'max_ent':
-            raise NotImplementedError
+            Q = np.sum(self.transitions*
+                       (self.rewards+self.discount*self.value_fun.get_values(None)),axis=2)
+            maxQ = np.max(Q,axis=1)
+            next_v = self.temperature*np.log((np.exp((Q-maxQ[:,np.newaxis])/self.temperature)).sum())+maxQ
             """ Your code ends here"""
         else:
             raise NotImplementedError
@@ -155,9 +160,15 @@ class ValueIteration(object):
 
         """INSERT YOUR CODE HERE"""
         if self.policy_type == 'deterministic':
-            raise NotImplementedError
+            pi  = np.argmax(np.sum(self.transitions*
+                                   (self.rewards+self.discount*self.value_fun.get_values(None)),axis=2)
+                            ,axis=1)
         elif self.policy_type == 'max_ent':
-            raise NotImplementedError
+            Q = np.sum(self.transitions*
+                       (self.rewards+self.discount*self.value_fun.get_values(None)),axis=2)
+            maxQ = np.max(Q,axis=1)
+            pi = self.temperature*(np.exp((Q-maxQ[:,np.newaxis])/self.temperature))+self.eps
+            pi = pi/np.sum(pi,axis=1)[:,np.newaxis] 
             """ Your code ends here"""
         else:
             raise NotImplementedError
